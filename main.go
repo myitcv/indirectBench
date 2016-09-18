@@ -162,5 +162,36 @@ func (t *T3) S(i uint) *S {
 	return (*S)(context[t.ss[i]])
 }
 
-func main() {
+type T4 struct {
+	s1 uint
+	s2 uint
+	s3 uint
+	s4 uint
+	s5 uint
+
+	ss []uint
+}
+
+func (t *T4) S1(context map[uint]unsafe.Pointer) *S {
+	return (*S)(context[t.s1])
+}
+
+func (t *T4) S2(context map[uint]unsafe.Pointer) *S {
+	return (*S)(context[t.s2])
+}
+
+func (t *T4) S3(context map[uint]unsafe.Pointer) *S {
+	return (*S)(context[t.s3])
+}
+
+func (t *T4) S4(context map[uint]unsafe.Pointer) *S {
+	return (*S)(context[t.s4])
+}
+
+func (t *T4) S5(context map[uint]unsafe.Pointer) *S {
+	return (*S)(context[t.s5])
+}
+
+func (t *T4) S(context map[uint]unsafe.Pointer, i uint) *S {
+	return (*S)(context[t.ss[i]])
 }

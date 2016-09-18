@@ -92,6 +92,30 @@ func BenchmarkGoRoutineSpecific(b *testing.B) {
 	}
 }
 
+func BenchmarkIndirectMapSpecific(b *testing.B) {
+	lookup := map[uint]unsafe.Pointer{
+		0: unsafe.Pointer(&S{}),
+		1: unsafe.Pointer(&S{}),
+		2: unsafe.Pointer(&S{}),
+		3: unsafe.Pointer(&S{}),
+		4: unsafe.Pointer(&S{}),
+	}
+	t4 := &T4{
+		s1: 0,
+		s2: 1,
+		s3: 2,
+		s4: 3,
+		s5: 4,
+	}
+	for n := 0; n < b.N; n++ {
+		_ = t4.S1(lookup)
+		_ = t4.S2(lookup)
+		_ = t4.S3(lookup)
+		_ = t4.S4(lookup)
+		_ = t4.S5(lookup)
+	}
+}
+
 func BenchmarkPointersMultiple(b *testing.B) {
 	t1 := &T1{
 		ss: make([]*S, Large),
@@ -148,6 +172,26 @@ func BenchmarkGoRoutineMultiple(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < Large; i++ {
 			_ = t3.S(uint(i))
+		}
+	}
+}
+
+func BenchmarkIndirectMapMultiple(b *testing.B) {
+	t4 := &T4{
+		ss: make([]uint, Large),
+	}
+
+	context := make(map[uint]unsafe.Pointer, Large)
+
+	for i := 0; i < Large; i++ {
+		context[uint(i)] = unsafe.Pointer(&S{})
+	}
+
+	b.ResetTimer()
+
+	for n := 0; n < b.N; n++ {
+		for i := 0; i < Large; i++ {
+			_ = t4.S(context, uint(i))
 		}
 	}
 }
